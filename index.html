@@ -248,6 +248,39 @@ body::before {
   color: var(--red);
 }
 
+/* View switcher */
+.view-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.view-btn {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: 'Noto Sans KR';
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.view-btn:hover, .view-btn.active {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.view-btn .view-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
 /* Filter */
 .filters {
   display: flex;
@@ -471,11 +504,122 @@ body::before {
   color: var(--gold-dim);
 }
 
+/* Kanban board */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  min-height: 400px;
+}
+
+.kanban-column {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kanban-col-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 0.25rem;
+}
+
+.kanban-col-title {
+  font-family: 'JetBrains Mono';
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.kanban-col-backlog .kanban-col-title { color: var(--purple); }
+.kanban-col-progress .kanban-col-title { color: var(--orange); }
+.kanban-col-done .kanban-col-title { color: var(--green); }
+
+.kanban-col-count {
+  font-family: 'JetBrains Mono';
+  font-size: 0.7rem;
+  background: rgba(255,255,255,0.06);
+  padding: 0.15rem 0.5rem;
+  border-radius: 8px;
+  color: var(--text-secondary);
+}
+
+.kanban-card {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.kanban-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--gold-dim);
+  transform: translateY(-2px);
+}
+
+.kanban-card .card-header { margin-bottom: 0.6rem; }
+.kanban-card .card-tagline { font-size: 0.7rem; }
+.kanban-card .card-progress { margin-bottom: 0.6rem; }
+
+.kanban-card .milestones-toggle {
+  font-family: 'JetBrains Mono';
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0.25rem 0;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.kanban-card .milestones-toggle:hover {
+  color: var(--gold);
+}
+
+.kanban-card .milestones-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.kanban-card .milestones-collapsible.open {
+  max-height: 500px;
+}
+
+.kanban-card .next-action {
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.72rem;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.35s ease forwards;
+  opacity: 0;
+}
+
+/* Hide inactive view */
+.view-hidden { display: none !important; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .container { padding: 1rem; }
   .header h1 { font-size: 1.8rem; }
   .project-grid { grid-template-columns: 1fr; }
+  .kanban-board { grid-template-columns: 1fr; }
   .stats-bar { justify-content: center; }
   .stat-card { min-width: 100px; padding: 0.75rem 1rem; }
   .focus-item { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
@@ -508,9 +652,16 @@ body::before {
 
   <div class="focus-zone" id="focusZone"></div>
 
-  <div class="filters" id="filters"></div>
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+    <div class="filters" id="filters" style="margin-bottom:0;"></div>
+    <div class="view-switcher" id="viewSwitcher">
+      <button class="view-btn active" data-view="grid"><span class="view-icon">▦</span> Grid</button>
+      <button class="view-btn" data-view="kanban"><span class="view-icon">☰</span> Kanban</button>
+    </div>
+  </div>
 
   <div class="project-grid" id="projectGrid"></div>
+  <div class="kanban-board view-hidden" id="kanbanBoard"></div>
 
   <div class="dashboard-footer">
     <span class="brand">PointnLine</span> · Project Dashboard · 매일 24:00 KST 자동 업데이트<br>
@@ -543,8 +694,7 @@ function daysSince(dateStr) {
 function renderFocusZone(projects) {
   const nonDone = projects.filter(p => p.status !== 'done');
   let focusProjects = nonDone.filter(p => p.progress >= 60);
-  
-  // If no 60%+ projects, pick top 2 by progress
+
   if (focusProjects.length === 0) {
     focusProjects = [...nonDone].sort((a, b) => b.progress - a.progress).slice(0, 2);
   } else {
@@ -574,12 +724,17 @@ function renderFocusZone(projects) {
   `;
 }
 
+let currentView = localStorage.getItem('pnl-dashboard-view') || 'grid';
+let currentFilter = 'all';
+let allProjects = [];
+
 function renderDashboard(data) {
-  const projects = data.projects;
-  
+  allProjects = data.projects;
+  const projects = allProjects;
+
   // Last updated
   const updated = new Date(data.lastUpdated);
-  document.getElementById('lastUpdated').textContent = 
+  document.getElementById('lastUpdated').textContent =
     updated.toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' }) + ' ' +
     updated.toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit' });
 
@@ -625,12 +780,37 @@ function renderDashboard(data) {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      renderGrid(projects, filter);
+      currentFilter = btn.dataset.filter;
+      renderCurrentView();
     });
   });
 
-  renderGrid(projects, 'all');
+  // View switcher
+  setActiveView(currentView);
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.dataset.view;
+      currentView = view;
+      localStorage.setItem('pnl-dashboard-view', view);
+      setActiveView(view);
+    });
+  });
+
+  renderCurrentView();
+}
+
+function setActiveView(view) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.getElementById('projectGrid').classList.toggle('view-hidden', view !== 'grid');
+  document.getElementById('kanbanBoard').classList.toggle('view-hidden', view !== 'kanban');
+}
+
+function renderCurrentView() {
+  if (currentView === 'grid') {
+    renderGrid(allProjects, currentFilter);
+  } else {
+    renderKanban(allProjects, currentFilter);
+  }
 }
 
 function renderGrid(projects, filter) {
@@ -652,7 +832,7 @@ function renderGrid(projects, filter) {
   }
 
   const grid = document.getElementById('projectGrid');
-  grid.innerHTML = filtered.map(p => {
+  grid.innerHTML = filtered.map((p, i) => {
     const st = STATUS_MAP[p.status] || STATUS_MAP['planning'];
     const progressColor = getProgressColor(p.progress);
     const doneMilestones = p.milestones.filter(m => m.done).length;
@@ -665,7 +845,7 @@ function renderGrid(projects, filter) {
     const activityIcon = isStale ? '⚠️' : '📅';
 
     return `
-    <div class="project-card${staleCardClass}" data-status="${p.status}">
+    <div class="project-card${staleCardClass} fade-in" data-status="${p.status}" style="animation-delay:${i * 0.05}s">
       <div class="card-header">
         <div>
           <div class="card-title">${p.name}</div>
@@ -708,6 +888,100 @@ function renderGrid(projects, filter) {
       </div>
     </div>`;
   }).join('');
+}
+
+function filterProjects(projects, filter) {
+  if (filter === 'done') return projects.filter(p => p.status === 'done');
+  if (filter === 'in-progress') return projects.filter(p => ['active','in-progress'].includes(p.status));
+  if (filter === 'planning') return projects.filter(p => p.status === 'planning');
+  if (filter === 'finish-first') return projects.filter(p => p.status !== 'done');
+  if (filter.startsWith('cat:')) return projects.filter(p => p.category === filter.slice(4));
+  return projects;
+}
+
+function buildKanbanCard(p, i) {
+  const st = STATUS_MAP[p.status] || STATUS_MAP['planning'];
+  const progressColor = getProgressColor(p.progress);
+  const doneMilestones = p.milestones.filter(m => m.done).length;
+  const totalMilestones = p.milestones.length;
+  const cardId = 'km-' + p.id;
+
+  return `
+  <div class="kanban-card fade-in" style="animation-delay:${i * 0.05}s">
+    <div class="card-header">
+      <div>
+        <div class="card-title">${p.name}</div>
+        <div class="card-tagline">${p.tagline}</div>
+      </div>
+      <span class="status-badge ${st.class}">${st.label}</span>
+    </div>
+    <div class="card-progress">
+      <div class="card-progress-header">
+        <span>${doneMilestones}/${totalMilestones} milestones</span>
+        <span class="pct">${p.progress}%</span>
+      </div>
+      <div class="card-progress-track">
+        <div class="card-progress-fill" style="width:${p.progress}%; background:${progressColor}"></div>
+      </div>
+    </div>
+    <div class="milestones-toggle" onclick="toggleMilestones('${cardId}')">▸ 마일스톤 보기</div>
+    <div class="milestones-collapsible" id="${cardId}">
+      <div class="milestones">
+        ${p.milestones.map(m => `
+          <div class="milestone ${m.done ? 'done' : ''}">
+            <span class="check">${m.done ? '✓' : '○'}</span>
+            <span>${m.name}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ${p.status !== 'done' ? `
+    <div class="next-action">
+      <div class="next-action-label">→ Next Action</div>
+      ${p.nextAction}
+    </div>` : ''}
+  </div>`;
+}
+
+function toggleMilestones(id) {
+  const el = document.getElementById(id);
+  const toggle = el.previousElementSibling;
+  el.classList.toggle('open');
+  toggle.textContent = el.classList.contains('open') ? '▾ 마일스톤 접기' : '▸ 마일스톤 보기';
+}
+
+function renderKanban(projects, filter) {
+  const filtered = filterProjects(projects, filter);
+
+  const backlog = filtered.filter(p => p.status === 'planning');
+  const inProgress = filtered.filter(p => ['in-progress','active'].includes(p.status))
+    .sort((a,b) => b.progress - a.progress);
+  const done = filtered.filter(p => p.status === 'done');
+
+  const board = document.getElementById('kanbanBoard');
+  board.innerHTML = `
+    <div class="kanban-column kanban-col-backlog fade-in" style="animation-delay:0s">
+      <div class="kanban-col-header">
+        <span class="kanban-col-title">📋 Backlog</span>
+        <span class="kanban-col-count">${backlog.length}</span>
+      </div>
+      ${backlog.map((p,i) => buildKanbanCard(p, i)).join('')}
+    </div>
+    <div class="kanban-column kanban-col-progress fade-in" style="animation-delay:0.08s">
+      <div class="kanban-col-header">
+        <span class="kanban-col-title">🔄 In Progress</span>
+        <span class="kanban-col-count">${inProgress.length}</span>
+      </div>
+      ${inProgress.map((p,i) => buildKanbanCard(p, i)).join('')}
+    </div>
+    <div class="kanban-column kanban-col-done fade-in" style="animation-delay:0.16s">
+      <div class="kanban-col-header">
+        <span class="kanban-col-title">✅ Done</span>
+        <span class="kanban-col-count">${done.length}</span>
+      </div>
+      ${done.map((p,i) => buildKanbanCard(p, i)).join('')}
+    </div>
+  `;
 }
 
 // Load data
