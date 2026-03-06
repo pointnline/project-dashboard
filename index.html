@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PointnLine — Project Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8d48b;
+  --gold-dim: #8a7233;
+  --bg-dark: #0a0a0f;
+  --bg-card: rgba(255,255,255,0.04);
+  --bg-card-hover: rgba(255,255,255,0.08);
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(201,168,76,0.2);
+  --text-primary: #f0ece2;
+  --text-secondary: #9a958a;
+  --text-dim: #5a5650;
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.15);
+  --blue: #60a5fa;
+  --blue-dim: rgba(96,165,250,0.15);
+  --orange: #fb923c;
+  --orange-dim: rgba(251,146,60,0.15);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.15);
+  --red: #f87171;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(201,168,76,0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(96,165,250,0.02) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+
+.container { max-width: 1400px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 2rem;
+}
+
+.header-label {
+  font-family: 'JetBrains Mono';
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.header-sub {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.header-sub .updated {
+  font-family: 'JetBrains Mono';
+  color: var(--gold-dim);
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  min-width: 140px;
+  backdrop-filter: blur(10px);
+}
+
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Overall progress */
+.overall-progress {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.overall-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.overall-label span:last-child {
+  font-family: 'JetBrains Mono';
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.progress-track {
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-light));
+  transition: width 1s ease;
+}
+
+/* Filter */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: 'Noto Sans KR';
+  transition: all 0.3s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Project grid */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Project card */
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.project-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--gold-dim);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.card-tagline {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+
+.status-badge {
+  font-family: 'JetBrains Mono';
+  font-size: 0.65rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.status-done { background: var(--green-dim); color: var(--green); }
+.status-active { background: var(--blue-dim); color: var(--blue); }
+.status-in-progress { background: var(--orange-dim); color: var(--orange); }
+.status-planning { background: var(--purple-dim); color: var(--purple); }
+.status-blocked { background: rgba(248,113,113,0.15); color: var(--red); }
+
+.card-phase {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-family: 'JetBrains Mono';
+}
+
+/* Card progress */
+.card-progress {
+  margin-bottom: 1rem;
+}
+
+.card-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.card-progress-header .pct {
+  font-family: 'JetBrains Mono';
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.card-progress-track {
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.card-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+/* Milestones */
+.milestones {
+  margin-bottom: 1rem;
+}
+
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  padding: 0.2rem 0;
+  color: var(--text-secondary);
+}
+
+.milestone.done { color: var(--text-dim); text-decoration: line-through; }
+.milestone .check { font-size: 0.7rem; }
+.milestone.done .check { color: var(--green); }
+.milestone:not(.done) .check { color: var(--text-dim); }
+
+/* Next action */
+.next-action {
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.78rem;
+  color: var(--gold-light);
+}
+
+.next-action-label {
+  font-family: 'JetBrains Mono';
+  font-size: 0.65rem;
+  color: var(--gold-dim);
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Links */
+.card-links {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.card-link {
+  font-family: 'JetBrains Mono';
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.card-link:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+/* Last activity */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.last-activity {
+  font-family: 'JetBrains Mono';
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.category-tag {
+  font-family: 'JetBrains Mono';
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Footer */
+.dashboard-footer {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono';
+}
+
+.dashboard-footer .brand {
+  color: var(--gold-dim);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container { padding: 1rem; }
+  .header h1 { font-size: 1.8rem; }
+  .project-grid { grid-template-columns: 1fr; }
+  .stats-bar { justify-content: center; }
+  .stat-card { min-width: 100px; padding: 0.75rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-label">PointnLine Development</div>
+    <h1>Project Dashboard</h1>
+    <div class="header-sub">
+      전체 프로젝트 개발 현황 · 마지막 업데이트 <span class="updated" id="lastUpdated">—</span>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div class="overall-progress">
+    <div class="overall-label">
+      <span>전체 진행률</span>
+      <span id="overallPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="overallFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="project-grid" id="projectGrid"></div>
+
+  <div class="dashboard-footer">
+    <span class="brand">PointnLine</span> · Project Dashboard · 매일 24:00 KST 자동 업데이트<br>
+    Powered by 🐕 베리독
+  </div>
+</div>
+
+<script>
+const STATUS_MAP = {
+  'done': { label: 'DONE', class: 'status-done' },
+  'active': { label: 'ACTIVE', class: 'status-active' },
+  'in-progress': { label: 'IN PROGRESS', class: 'status-in-progress' },
+  'planning': { label: 'PLANNING', class: 'status-planning' },
+  'blocked': { label: 'BLOCKED', class: 'status-blocked' }
+};
+
+function getProgressColor(pct) {
+  if (pct >= 90) return 'var(--green)';
+  if (pct >= 60) return 'var(--gold)';
+  if (pct >= 30) return 'var(--orange)';
+  return 'var(--purple)';
+}
+
+function daysSince(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  return Math.floor((now - d) / 86400000);
+}
+
+function renderDashboard(data) {
+  const projects = data.projects;
+  
+  // Last updated
+  const updated = new Date(data.lastUpdated);
+  document.getElementById('lastUpdated').textContent = 
+    updated.toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' }) + ' ' +
+    updated.toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit' });
+
+  // Stats
+  const total = projects.length;
+  const done = projects.filter(p => p.status === 'done').length;
+  const active = projects.filter(p => ['active','in-progress'].includes(p.status)).length;
+  const planning = projects.filter(p => p.status === 'planning').length;
+  const avgProgress = Math.round(projects.reduce((s,p) => s + p.progress, 0) / total);
+  const totalMilestones = projects.reduce((s,p) => s + p.milestones.length, 0);
+  const doneMilestones = projects.reduce((s,p) => s + p.milestones.filter(m=>m.done).length, 0);
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">전체 프로젝트</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--green)">${done}</div><div class="stat-label">완료</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--orange)">${active}</div><div class="stat-label">진행 중</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--purple)">${planning}</div><div class="stat-label">계획 중</div></div>
+    <div class="stat-card"><div class="stat-value">${doneMilestones}/${totalMilestones}</div><div class="stat-label">마일스톤</div></div>
+  `;
+
+  // Overall progress
+  document.getElementById('overallPct').textContent = avgProgress + '%';
+  setTimeout(() => {
+    document.getElementById('overallFill').style.width = avgProgress + '%';
+  }, 100);
+
+  // Filters
+  const categories = [...new Set(projects.map(p => p.category))];
+  document.getElementById('filters').innerHTML = `
+    <button class="filter-btn active" data-filter="all">전체</button>
+    <button class="filter-btn" data-filter="done">✅ 완료</button>
+    <button class="filter-btn" data-filter="in-progress">🔄 진행 중</button>
+    <button class="filter-btn" data-filter="planning">📋 계획</button>
+    ${categories.map(c => `<button class="filter-btn" data-filter="cat:${c}">${c}</button>`).join('')}
+  `;
+
+  // Filter click handlers
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      renderGrid(projects, filter);
+    });
+  });
+
+  renderGrid(projects, 'all');
+}
+
+function renderGrid(projects, filter) {
+  let filtered = projects;
+  if (filter === 'done') filtered = projects.filter(p => p.status === 'done');
+  else if (filter === 'in-progress') filtered = projects.filter(p => ['active','in-progress'].includes(p.status));
+  else if (filter === 'planning') filtered = projects.filter(p => p.status === 'planning');
+  else if (filter.startsWith('cat:')) filtered = projects.filter(p => p.category === filter.slice(4));
+
+  // Sort: in-progress first, then by progress desc
+  const statusOrder = {'in-progress':0, 'active':1, 'planning':2, 'blocked':3, 'done':4};
+  filtered.sort((a,b) => (statusOrder[a.status]||0) - (statusOrder[b.status]||0) || b.progress - a.progress);
+
+  const grid = document.getElementById('projectGrid');
+  grid.innerHTML = filtered.map(p => {
+    const st = STATUS_MAP[p.status] || STATUS_MAP['planning'];
+    const progressColor = getProgressColor(p.progress);
+    const doneMilestones = p.milestones.filter(m => m.done).length;
+    const totalMilestones = p.milestones.length;
+    const days = daysSince(p.lastActivity);
+    const daysLabel = days === 0 ? '오늘' : days === 1 ? '어제' : `${days}일 전`;
+
+    return `
+    <div class="project-card" data-status="${p.status}">
+      <div class="card-header">
+        <div>
+          <div class="card-title">${p.name}</div>
+          <div class="card-tagline">${p.tagline}</div>
+        </div>
+        <span class="status-badge ${st.class}">${st.label}</span>
+      </div>
+      <div class="card-phase">${p.phase}</div>
+      <div class="card-progress">
+        <div class="card-progress-header">
+          <span>진행률 (${doneMilestones}/${totalMilestones} milestones)</span>
+          <span class="pct">${p.progress}%</span>
+        </div>
+        <div class="card-progress-track">
+          <div class="card-progress-fill" style="width:${p.progress}%; background:${progressColor}"></div>
+        </div>
+      </div>
+      <div class="milestones">
+        ${p.milestones.slice(0, 5).map(m => `
+          <div class="milestone ${m.done ? 'done' : ''}">
+            <span class="check">${m.done ? '✓' : '○'}</span>
+            <span>${m.name}</span>
+          </div>
+        `).join('')}
+        ${p.milestones.length > 5 ? `<div class="milestone"><span class="check">⋯</span><span>+${p.milestones.length - 5} more</span></div>` : ''}
+      </div>
+      ${p.status !== 'done' ? `
+      <div class="next-action">
+        <div class="next-action-label">→ Next Action</div>
+        ${p.nextAction}
+      </div>` : ''}
+      ${p.pages || p.repo ? `
+      <div class="card-links">
+        ${p.pages ? `<a href="${p.pages}" target="_blank" class="card-link">🌐 Live</a>` : ''}
+        ${p.repo ? `<a href="https://github.com/${p.repo}" target="_blank" class="card-link">📦 Repo</a>` : ''}
+      </div>` : ''}
+      <div class="card-footer">
+        <span class="category-tag">${p.category}</span>
+        <span class="last-activity">📅 ${daysLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Load data
+fetch('projects.json')
+  .then(r => r.json())
+  .then(renderDashboard)
+  .catch(err => {
+    console.error('Failed to load projects.json:', err);
+    document.getElementById('projectGrid').innerHTML = '<p style="color:var(--red);text-align:center;padding:2rem;">데이터 로딩 실패</p>';
+  });
+</script>
+</body>
+</html>

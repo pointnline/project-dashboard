@@ -1,0 +1,326 @@
+{
+  "lastUpdated": "2026-03-06T24:00:00+09:00",
+  "projects": [
+    {
+      "id": "ancient-one",
+      "name": "🏛️ Ancient One",
+      "tagline": "I've seen this before.",
+      "category": "ROOT",
+      "status": "in-progress",
+      "progress": 35,
+      "phase": "Phase 2 — Events DB 확장",
+      "repo": "pointnline/finance-history",
+      "pages": "https://pointnline.github.io/finance-history/",
+      "path": "~/Projects/finance-history/",
+      "milestones": [
+        {"name": "v1 웹 구현", "done": true},
+        {"name": "events.json 17개", "done": true},
+        {"name": "History Match 프레임워크", "done": true},
+        {"name": "Events DB 250+개 확장", "done": false},
+        {"name": "History Match UI v2", "done": false},
+        {"name": "Wikipedia API 연동", "done": false},
+        {"name": "SaaS 런칭", "done": false}
+      ],
+      "nextAction": "서브에이전트 4개 완료 → events 머지",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "number-doctor",
+      "name": "🏥 넘버닥터",
+      "tagline": "숫자로 진단합니다",
+      "category": "Financial Tool",
+      "status": "in-progress",
+      "progress": 45,
+      "phase": "Phase 1 완료, Phase 2 설계 중",
+      "repo": null,
+      "pages": null,
+      "path": "~/Projects/number-doctor/",
+      "milestones": [
+        {"name": "Phase 1 — dartcli 기반 진단", "done": true},
+        {"name": "삼성전자/다올/SK디앤디 테스트", "done": true},
+        {"name": "Phase 2 — Level 2 분석 설계", "done": false},
+        {"name": "Brave 뉴스 연동", "done": false},
+        {"name": "동종업계 비교", "done": false},
+        {"name": "HTML 리포트", "done": false},
+        {"name": "SaaS 런칭 (9,900원/월)", "done": false}
+      ],
+      "nextAction": "v2 역질문 답변 대기",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "redmoon",
+      "name": "🔴 RedMoon",
+      "tagline": "Catch My Edge",
+      "category": "Deal Pipeline",
+      "status": "in-progress",
+      "progress": 30,
+      "phase": "설계 완료, 코딩 대기",
+      "repo": null,
+      "pages": null,
+      "path": "~/Projects/redmoon/",
+      "milestones": [
+        {"name": "파이프라인 설계 v1", "done": true},
+        {"name": "deal-intake-v2.py", "done": true},
+        {"name": "company-analysis.py", "done": true},
+        {"name": "deals.json CRUD", "done": false},
+        {"name": "deal-monitor.py", "done": false},
+        {"name": "경쟁사 모니터링 크론", "done": true},
+        {"name": "부동산 인텔 크론", "done": true}
+      ],
+      "nextAction": "파이프라인 코딩 시작",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "eagle-eye",
+      "name": "🦅 Eagle EYE",
+      "tagline": "트렌드를 먼저 본다",
+      "category": "Investment Intel",
+      "status": "planning",
+      "progress": 15,
+      "phase": "아키텍처 설계 대기",
+      "repo": null,
+      "pages": null,
+      "path": "~/Projects/eagle-eye/",
+      "milestones": [
+        {"name": "컨셉 확정", "done": true},
+        {"name": "소환법 패턴 확정", "done": true},
+        {"name": "첫 인사이트 (VKOSPI)", "done": true},
+        {"name": "아키텍처 설계", "done": false},
+        {"name": "자동 섹터 스캔", "done": false},
+        {"name": "관련주 매핑 DB", "done": false},
+        {"name": "타이밍 시그널", "done": false}
+      ],
+      "nextAction": "역질문 답변 대기",
+      "lastActivity": "2026-03-05"
+    },
+    {
+      "id": "game",
+      "name": "🎮 GAME",
+      "tagline": "Gallery About ME — Know yourself",
+      "category": "Personal Brand",
+      "status": "in-progress",
+      "progress": 65,
+      "phase": "기능 확장 중",
+      "repo": null,
+      "pages": "https://gamegalleryaboutme.web.app",
+      "path": "~/Projects/digital-gallery/",
+      "milestones": [
+        {"name": "4 Zone (Universe/Artists/Music/Books)", "done": true},
+        {"name": "Firebase 배포", "done": true},
+        {"name": "한글 검색 (Kakao API)", "done": true},
+        {"name": "My Universe 마인드맵", "done": true},
+        {"name": "Add 버튼 수정", "done": true},
+        {"name": "SVG connectors", "done": false},
+        {"name": "Stripe $0.99", "done": false},
+        {"name": "Wine Zone", "done": false},
+        {"name": "아카이브 공유", "done": false}
+      ],
+      "nextAction": "SVG connectors JS 코드 작성",
+      "lastActivity": "2026-03-05"
+    },
+    {
+      "id": "brand-universe",
+      "name": "🌌 Brand Universe",
+      "tagline": "PointnLine 브랜드 생태계",
+      "category": "Visualization",
+      "status": "done",
+      "progress": 100,
+      "phase": "v2 완료",
+      "repo": "pointnline/brand-universe",
+      "pages": "https://pointnline.github.io/brand-universe/",
+      "path": "~/Projects/brand-universe/",
+      "milestones": [
+        {"name": "13+ROOT 브랜드 시각화", "done": true},
+        {"name": "4 레이어 구조", "done": true},
+        {"name": "GitHub Pages 배포", "done": true},
+        {"name": "옵시디언 노트 생성", "done": true}
+      ],
+      "nextAction": "완료",
+      "lastActivity": "2026-03-05"
+    },
+    {
+      "id": "design-system",
+      "name": "🎨 Design System",
+      "tagline": "PointnLine 시그니처",
+      "category": "Design",
+      "status": "in-progress",
+      "progress": 70,
+      "phase": "v1.0.0 발행, v2 준비",
+      "repo": "pointnline/design-system",
+      "pages": "https://pointnline.github.io/design-system/",
+      "path": "~/Projects/design-system/",
+      "milestones": [
+        {"name": "v1.0.0 — 9섹션", "done": true},
+        {"name": "Dark Glassmorphism 스타일", "done": true},
+        {"name": "GitHub Pages 배포", "done": true},
+        {"name": "v2 다크/라이트 모드", "done": false},
+        {"name": "컴포넌트 복사 버튼", "done": false},
+        {"name": "반응형 가이드", "done": false}
+      ],
+      "nextAction": "v2 업데이트",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "corporate-finance-map",
+      "name": "📊 기업재무 Map",
+      "tagline": "인터랙티브 학습",
+      "category": "Education",
+      "status": "done",
+      "progress": 100,
+      "phase": "완료",
+      "repo": "pointnline/corporate-finance-map",
+      "pages": "https://pointnline.github.io/corporate-finance-map/",
+      "path": "~/Projects/corporate-finance-map/",
+      "milestones": [
+        {"name": "인터랙티브 웹 완성", "done": true},
+        {"name": "GitHub Pages 배포", "done": true}
+      ],
+      "nextAction": "완료",
+      "lastActivity": "2026-03-05"
+    },
+    {
+      "id": "blog",
+      "name": "📝 JAYKKo Blog",
+      "tagline": "Hugo Stack 테마",
+      "category": "Content",
+      "status": "in-progress",
+      "progress": 40,
+      "phase": "포스트 작성 중",
+      "repo": "pointnline/jaykko-blog",
+      "pages": "https://pointnline.github.io/jaykko-blog/",
+      "path": "~/Projects/jaykko-blog/",
+      "milestones": [
+        {"name": "Hugo Stack 테마 셋업", "done": true},
+        {"name": "3개 포스트 발행", "done": true},
+        {"name": "자동 포스트 크론", "done": true},
+        {"name": "티스토리 연동", "done": false},
+        {"name": "Medium 연동", "done": false}
+      ],
+      "nextAction": "블로그 자동화 확장",
+      "lastActivity": "2026-03-04"
+    },
+    {
+      "id": "coupang-seller",
+      "name": "🛒 쿠팡 셀러",
+      "tagline": "1688 소싱 → 쿠팡 판매",
+      "category": "E-Commerce",
+      "status": "planning",
+      "progress": 5,
+      "phase": "리서치 완료, 실행 대기",
+      "repo": null,
+      "pages": null,
+      "path": null,
+      "milestones": [
+        {"name": "사업 가이드 작성", "done": true},
+        {"name": "블루오션 아이템 리서치", "done": false},
+        {"name": "사업자등록", "done": false},
+        {"name": "1688 샘플 주문", "done": false},
+        {"name": "쿠팡 입점", "done": false},
+        {"name": "첫 판매", "done": false}
+      ],
+      "nextAction": "카테고리 확정 → 1688 서칭",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "cmw",
+      "name": "🔥 CMW",
+      "tagline": "Claw My Way",
+      "category": "Content",
+      "status": "in-progress",
+      "progress": 25,
+      "phase": "v1 텍스트, v2 카드 준비",
+      "repo": null,
+      "pages": null,
+      "path": null,
+      "milestones": [
+        {"name": "v1 텍스트 크론", "done": true},
+        {"name": "v2 카드 이미지", "done": false},
+        {"name": "v3 뉴스레터", "done": false},
+        {"name": "v4 텔레그램 채널", "done": false},
+        {"name": "v5 숏폼", "done": false}
+      ],
+      "nextAction": "v2 명언 카드 이미지 생성",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "ai-creative-lab",
+      "name": "🤖 AI Creative Lab",
+      "tagline": "43 AI Tools",
+      "category": "Tool Collection",
+      "status": "in-progress",
+      "progress": 80,
+      "phase": "코드 리뷰 완료",
+      "repo": "pointnline/ai-creative-club",
+      "pages": null,
+      "path": null,
+      "milestones": [
+        {"name": "43개 도구 구현", "done": true},
+        {"name": "코드 리뷰", "done": true},
+        {"name": "리팩토링 (모듈 분리)", "done": false},
+        {"name": "배포", "done": false}
+      ],
+      "nextAction": "모듈 분리 리팩토링",
+      "lastActivity": "2026-03-04"
+    },
+    {
+      "id": "adhd-quest",
+      "name": "⚔️ ADHD Quest",
+      "tagline": "RPG 게이미피케이션",
+      "category": "Productivity",
+      "status": "active",
+      "progress": 50,
+      "phase": "Lv.2 운영 중",
+      "repo": null,
+      "pages": null,
+      "path": null,
+      "milestones": [
+        {"name": "온보딩 완료", "done": true},
+        {"name": "XP/레벨/스트릭 시스템", "done": true},
+        {"name": "아침/저녁/주간/월간 크론", "done": true},
+        {"name": "레벨 10까지 확장", "done": false}
+      ],
+      "nextAction": "레벨 시스템 확장",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "philosophy-daily",
+      "name": "📜 철학 데일리",
+      "tagline": "나이트소드",
+      "category": "Content",
+      "status": "active",
+      "progress": 90,
+      "phase": "크론잡 운영 중",
+      "repo": null,
+      "pages": null,
+      "path": null,
+      "milestones": [
+        {"name": "스크립트 작성", "done": true},
+        {"name": "A→C→D→B 로테이션", "done": true},
+        {"name": "크론잡 등록", "done": true},
+        {"name": "옵시디언 자동 저장", "done": true}
+      ],
+      "nextAction": "운영 유지",
+      "lastActivity": "2026-03-06"
+    },
+    {
+      "id": "commodity-monitor",
+      "name": "🏭 원자재 모니터링",
+      "tagline": "TradingEconomics 기반",
+      "category": "Market Intel",
+      "status": "active",
+      "progress": 90,
+      "phase": "크론잡 운영 중",
+      "repo": null,
+      "pages": null,
+      "path": null,
+      "milestones": [
+        {"name": "스크립트 작성", "done": true},
+        {"name": "6개 카테고리 포맷", "done": true},
+        {"name": "크론잡 등록 (11:30)", "done": true},
+        {"name": "옵시디언 자동 저장", "done": true}
+      ],
+      "nextAction": "운영 유지",
+      "lastActivity": "2026-03-06"
+    }
+  ]
+}
