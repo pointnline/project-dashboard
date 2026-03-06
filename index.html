@@ -156,6 +156,98 @@ body::before {
   transition: width 1s ease;
 }
 
+/* Focus Zone */
+.focus-zone {
+  background: var(--glass);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.focus-zone-header {
+  font-family: 'JetBrains Mono';
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.focus-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.focus-item:last-child {
+  border-bottom: none;
+}
+
+.focus-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.focus-item-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.focus-item-pct {
+  font-family: 'JetBrains Mono';
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-weight: 500;
+  min-width: 40px;
+}
+
+.focus-item-bar {
+  width: 60px;
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.focus-item-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--gold);
+}
+
+.focus-item-action {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280px;
+}
+
+/* Stale card */
+.project-card.stale {
+  border-color: rgba(248,113,113,0.2);
+}
+
+.project-card.stale:hover {
+  border-color: rgba(248,113,113,0.35);
+}
+
+.last-activity.stale {
+  color: var(--red);
+}
+
 /* Filter */
 .filters {
   display: flex;
@@ -386,6 +478,8 @@ body::before {
   .project-grid { grid-template-columns: 1fr; }
   .stats-bar { justify-content: center; }
   .stat-card { min-width: 100px; padding: 0.75rem 1rem; }
+  .focus-item { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+  .focus-item-action { text-align: left; max-width: 100%; }
 }
 </style>
 </head>
@@ -411,6 +505,8 @@ body::before {
       <div class="progress-fill" id="overallFill" style="width:0%"></div>
     </div>
   </div>
+
+  <div class="focus-zone" id="focusZone"></div>
 
   <div class="filters" id="filters"></div>
 
@@ -442,6 +538,40 @@ function daysSince(dateStr) {
   const d = new Date(dateStr);
   const now = new Date();
   return Math.floor((now - d) / 86400000);
+}
+
+function renderFocusZone(projects) {
+  const nonDone = projects.filter(p => p.status !== 'done');
+  let focusProjects = nonDone.filter(p => p.progress >= 60);
+  
+  // If no 60%+ projects, pick top 2 by progress
+  if (focusProjects.length === 0) {
+    focusProjects = [...nonDone].sort((a, b) => b.progress - a.progress).slice(0, 2);
+  } else {
+    focusProjects.sort((a, b) => b.progress - a.progress);
+  }
+
+  const zone = document.getElementById('focusZone');
+  if (focusProjects.length === 0) {
+    zone.style.display = 'none';
+    return;
+  }
+
+  zone.innerHTML = `
+    <div class="focus-zone-header">🎯 Focus Zone — 마무리 대상</div>
+    ${focusProjects.map(p => `
+      <div class="focus-item">
+        <div class="focus-item-left">
+          <span class="focus-item-name">${p.name}</span>
+          <span class="focus-item-pct">${p.progress}%</span>
+          <div class="focus-item-bar">
+            <div class="focus-item-bar-fill" style="width:${p.progress}%; background:${getProgressColor(p.progress)}"></div>
+          </div>
+        </div>
+        <span class="focus-item-action">→ ${p.nextAction}</span>
+      </div>
+    `).join('')}
+  `;
 }
 
 function renderDashboard(data) {
@@ -476,10 +606,14 @@ function renderDashboard(data) {
     document.getElementById('overallFill').style.width = avgProgress + '%';
   }, 100);
 
+  // Focus Zone
+  renderFocusZone(projects);
+
   // Filters
   const categories = [...new Set(projects.map(p => p.category))];
   document.getElementById('filters').innerHTML = `
     <button class="filter-btn active" data-filter="all">전체</button>
+    <button class="filter-btn" data-filter="finish-first">🏁 마무리 우선</button>
     <button class="filter-btn" data-filter="done">✅ 완료</button>
     <button class="filter-btn" data-filter="in-progress">🔄 진행 중</button>
     <button class="filter-btn" data-filter="planning">📋 계획</button>
@@ -504,11 +638,18 @@ function renderGrid(projects, filter) {
   if (filter === 'done') filtered = projects.filter(p => p.status === 'done');
   else if (filter === 'in-progress') filtered = projects.filter(p => ['active','in-progress'].includes(p.status));
   else if (filter === 'planning') filtered = projects.filter(p => p.status === 'planning');
+  else if (filter === 'finish-first') filtered = projects.filter(p => p.status !== 'done');
   else if (filter.startsWith('cat:')) filtered = projects.filter(p => p.category === filter.slice(4));
 
-  // Sort: in-progress first, then by progress desc
-  const statusOrder = {'in-progress':0, 'active':1, 'planning':2, 'blocked':3, 'done':4};
-  filtered.sort((a,b) => (statusOrder[a.status]||0) - (statusOrder[b.status]||0) || b.progress - a.progress);
+  // Sort
+  if (filter === 'finish-first') {
+    // Sort purely by progress DESC — highest first to encourage finishing
+    filtered.sort((a, b) => b.progress - a.progress);
+  } else {
+    // Default: status-based, then progress desc
+    const statusOrder = {'in-progress':0, 'active':1, 'planning':2, 'blocked':3, 'done':4};
+    filtered.sort((a,b) => (statusOrder[a.status]||0) - (statusOrder[b.status]||0) || b.progress - a.progress);
+  }
 
   const grid = document.getElementById('projectGrid');
   grid.innerHTML = filtered.map(p => {
@@ -518,9 +659,13 @@ function renderGrid(projects, filter) {
     const totalMilestones = p.milestones.length;
     const days = daysSince(p.lastActivity);
     const daysLabel = days === 0 ? '오늘' : days === 1 ? '어제' : `${days}일 전`;
+    const isStale = days >= 7 && p.status !== 'done';
+    const staleCardClass = isStale ? ' stale' : '';
+    const staleActivityClass = isStale ? ' stale' : '';
+    const activityIcon = isStale ? '⚠️' : '📅';
 
     return `
-    <div class="project-card" data-status="${p.status}">
+    <div class="project-card${staleCardClass}" data-status="${p.status}">
       <div class="card-header">
         <div>
           <div class="card-title">${p.name}</div>
@@ -559,7 +704,7 @@ function renderGrid(projects, filter) {
       </div>` : ''}
       <div class="card-footer">
         <span class="category-tag">${p.category}</span>
-        <span class="last-activity">📅 ${daysLabel}</span>
+        <span class="last-activity${staleActivityClass}">${activityIcon} ${daysLabel}</span>
       </div>
     </div>`;
   }).join('');
