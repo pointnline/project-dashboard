@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-06T24:00:00+09:00",
+  "lastUpdated": "2026-03-07T15:00:00+09:00",
   "projects": [
     {
       "id": "ancient-one",
@@ -22,7 +22,7 @@
         {"name": "SaaS 런칭", "done": false}
       ],
       "nextAction": "서브에이전트 4개 완료 → events 머지",
-      "lastActivity": "2026-03-06"
+      "lastActivity": "2026-03-05"
     },
     {
       "id": "number-doctor",
@@ -30,22 +30,22 @@
       "tagline": "숫자로 진단합니다",
       "category": "Financial Tool",
       "status": "in-progress",
-      "progress": 45,
-      "phase": "Phase 1 완료, Phase 2 설계 중",
+      "progress": 70,
+      "phase": "v3.2 완료 — 글로벌 IB 기준 적용",
       "repo": null,
       "pages": null,
       "path": "~/Projects/number-doctor/",
       "milestones": [
         {"name": "Phase 1 — dartcli 기반 진단", "done": true},
         {"name": "삼성전자/다올/SK디앤디 테스트", "done": true},
-        {"name": "Phase 2 — Level 2 분석 설계", "done": false},
-        {"name": "Brave 뉴스 연동", "done": false},
-        {"name": "동종업계 비교", "done": false},
+        {"name": "Phase 2 — Level 2 분석 설계", "done": true},
+        {"name": "Brave 뉴스 연동", "done": true},
+        {"name": "동종업계 비교", "done": true},
         {"name": "HTML 리포트", "done": false},
         {"name": "SaaS 런칭 (9,900원/월)", "done": false}
       ],
-      "nextAction": "v2 역질문 답변 대기",
-      "lastActivity": "2026-03-06"
+      "nextAction": "커스텀 판단 기준 삭제 완료, 글로벌 IB 뷰 적용. HTML 리포트 구현 대기",
+      "lastActivity": "2026-03-07"
     },
     {
       "id": "redmoon",
@@ -53,8 +53,8 @@
       "tagline": "Catch My Edge",
       "category": "Deal Pipeline",
       "status": "in-progress",
-      "progress": 30,
-      "phase": "설계 완료, 코딩 대기",
+      "progress": 55,
+      "phase": "v2 통합 파이프라인 완성, v2.1~v2.4 진행 중",
       "repo": null,
       "pages": null,
       "path": "~/Projects/redmoon/",
@@ -62,13 +62,17 @@
         {"name": "파이프라인 설계 v1", "done": true},
         {"name": "deal-intake-v2.py", "done": true},
         {"name": "company-analysis.py", "done": true},
-        {"name": "deals.json CRUD", "done": false},
+        {"name": "deals.json CRUD", "done": true},
         {"name": "deal-monitor.py", "done": false},
         {"name": "경쟁사 모니터링 크론", "done": true},
-        {"name": "부동산 인텔 크론", "done": true}
+        {"name": "부동산 인텔 크론", "done": true},
+        {"name": "v2 통합 파이프라인 (3엔진 병렬)", "done": true},
+        {"name": "v2.1 건축물대장/실거래가/공시지가/네이버부동산/FRED/ECOS", "done": true},
+        {"name": "v2.2~v2.4 NCF/DSCR/시나리오/감정스크리닝/입지분석", "done": false},
+        {"name": "v2.5 감정평가서 PDF 파싱 → 보정계수 DB", "done": false}
       ],
-      "nextAction": "파이프라인 코딩 시작",
-      "lastActivity": "2026-03-06"
+      "nextAction": "v2.2~v2.4 코딩 에이전트 완료 대기, v2.5 감평서 PDF 테스트 대기",
+      "lastActivity": "2026-03-07"
     },
     {
       "id": "eagle-eye",
@@ -116,7 +120,7 @@
         {"name": "아카이브 공유", "done": false}
       ],
       "nextAction": "SVG connectors JS 코드 작성",
-      "lastActivity": "2026-03-05"
+      "lastActivity": "2026-03-04"
     },
     {
       "id": "brand-universe",
@@ -197,7 +201,7 @@
         {"name": "Medium 연동", "done": false}
       ],
       "nextAction": "블로그 자동화 확장",
-      "lastActivity": "2026-03-04"
+      "lastActivity": "2026-03-07"
     },
     {
       "id": "coupang-seller",
